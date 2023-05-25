@@ -1,0 +1,28 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Install Docker') {
+            steps {
+                sh 'sudo apt update'
+                sh 'sudo apt install -y docker.io'
+                sh 'sudo systemctl start docker'
+                sh 'sudo systemctl enable docker'
+            }
+        }
+
+        stage('Install Docker Compose') {
+            steps {
+                sh 'sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose'
+                sh 'sudo chmod +x /usr/local/bin/docker-compose'
+            }
+        }
+
+        stage('Verify Installation') {
+            steps {
+                sh 'docker --version'
+                sh 'docker-compose --version'
+            }
+        }
+    }
+}
